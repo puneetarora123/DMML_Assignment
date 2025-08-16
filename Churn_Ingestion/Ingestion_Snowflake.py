@@ -10,7 +10,7 @@ table_inter = 'raw_customer_churn_sf_temp'
 # Define Snowflake connection details
 snowflake_url = "roxlfst-jc21920.snowflakecomputing.com"
 snowflake_user = "DHARAN"
-snowflake_password = ''
+snowflake_password = 'Yasodharan@420024#'
 snowflake_warehouse = "COMPUTE_WH"
 snowflake_role = "ACCOUNTADMIN"
 snowflake_database = "dmml"
@@ -55,13 +55,28 @@ df.printSchema()
 # COMMAND ----------
 
 # DBTITLE 1,select required features
-df = df.select('Customer ID','Age','Gender','Tenure in Months','Monthly Charge','Total Charges','Contract','Payment Method')
+df = df.select('CUSTOMERID','AGE','GENDER','TENURE','MONTHLYCHARGES','TOTALCHARGES','CONTRACTTYPE','PAYMENTMETHOD')
+
+df = df.withColumnRenamed("CUSTOMERID", "CustomerID")
+df = df.withColumnRenamed("AGE", "Age")
+df = df.withColumnRenamed("GENDER", "Gender")
+df = df.withColumnRenamed("TENURE", "Tenure")
+df = df.withColumnRenamed("MONTHLYCHARGES", "MonthlyCharges")
+df = df.withColumnRenamed("TOTALCHARGES", "TotalCharges")
+df = df.withColumnRenamed("CONTRACTTYPE", "ContractType")
+df = df.withColumnRenamed("PAYMENTMETHOD", "PaymentMethod")
+
+# COMMAND ----------
+
+df.printSchema()
 
 # COMMAND ----------
 
 # DBTITLE 1,Datatype correction
-from pyspark.sql.types import IntegerType
+from pyspark.sql.types import IntegerType,DoubleType
 df = df.withColumn("Age", df["Age"].cast(IntegerType())).withColumn("Tenure", df["Tenure"].cast(IntegerType()))
+
+df = df.withColumn("MonthlyCharges", df["MonthlyCharges"].cast(DoubleType())).withColumn("TOTALCHARGES", df["TOTALCHARGES"].cast(DoubleType()))
 
 # COMMAND ----------
 

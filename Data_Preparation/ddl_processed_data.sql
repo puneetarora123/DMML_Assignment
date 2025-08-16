@@ -15,3 +15,7 @@ CREATE TABLE IF NOT EXISTS dmml.datamart.customer_churn_processed (
 )
 USING delta
 COMMENT 'Customer churn feature store table';
+
+-- COMMAND ----------
+
+select * from dmml.datamart.customer_churn_processed
