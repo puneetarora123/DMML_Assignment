@@ -1,0 +1,68 @@
+resources:
+  jobs:
+    Chrun_Prediction_Inference:
+      name: Chrun_Prediction_Inference
+      trigger:
+        pause_status: PAUSED
+        periodic:
+          interval: 1
+          unit: WEEKS
+      tasks:
+        - task_key: Raw_Ingestion_HuggingFace
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Churn_Ingestion/DDL_Ingestion
+            source: WORKSPACE
+        - task_key: Raw_Ingestion_Snowflake
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Churn_Ingestion/Ingestion_Snowflake
+            source: WORKSPACE
+        - task_key: Merge_Ingested_Raw_Data
+          depends_on:
+            - task_key: Raw_Ingestion_Snowflake
+            - task_key: Raw_Ingestion_HuggingFace
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Churn_Ingestion/merge_customer_churn_tables
+            source: WORKSPACE
+        - task_key: Data_Validation
+          depends_on:
+            - task_key: Merge_Ingested_Raw_Data
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Data
+              Validation/Data_Validation
+            source: WORKSPACE
+        - task_key: Preprocessing_Feature_Engineering
+          depends_on:
+            - task_key: Data_Validation
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Data_Preparation/data_preparation_Feature_Engineering
+            source: WORKSPACE
+        - task_key: Inference_Model
+          depends_on:
+            - task_key: Preprocessing_Feature_Engineering
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Inference/dmml_InferenceModel
+            source: WORKSPACE
+        - task_key: Data_Storage_Deltalake
+          depends_on:
+            - task_key: Inference_Model
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Data
+              Storage/Churn_Prediction_Storage_Deltalake
+            source: WORKSPACE
+        - task_key: Data_Storage_Snowflake
+          depends_on:
+            - task_key: Data_Storage_Deltalake
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Data
+              Storage/Churn_Prediction_Storage_Snowflake
+            source: WORKSPACE
+        - task_key: DL_Tables_Metadata_count
+          depends_on:
+            - task_key: Data_Storage_Deltalake
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Data
+              Storage/Deltalake_Tables_Metadata
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: STANDARD
