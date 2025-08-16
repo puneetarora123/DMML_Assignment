@@ -1,0 +1,12 @@
+resources:
+  jobs:
+    Churn_Model_Training:
+      name: Churn_Model_Training
+      tasks:
+        - task_key: Churn_Classification_Train
+          notebook_task:
+            notebook_path: /Workspace/Users/arorapuneet1998@gmail.com/DMML_Assignment/Model_Training/dmml_MODEL_TRAINING
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: STANDARD
