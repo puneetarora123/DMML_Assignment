@@ -37,17 +37,18 @@ sfOptions = {
   "sfRole":       snowflake_role,
   "sfDatabase":   snowflake_database,
   "sfSchema":     snowflake_schema,
-  "sfQueryChunkSize": snowflake_query_chunk_size
+  "sfQueryChunkSize": snowflake_query_chunk_size,
+  "parallelism": "1"
 }
 
 df = (
   spark.read
-       .format("snowflake")
+       .format("net.snowflake.spark.snowflake")
        .options(**sfOptions)
-       .option("dbtable", "CHURN_DATASET")  # the table you loaded
+       .option("query", "SELECT * FROM CUSTOMER_CHURN.CHURN_DATASET limit 100")
        .load()
 )
-
+# .option("dbtable", "CHURN_DATASET")  # the table you loaded
 df.show(10)
 df.printSchema()
 
