@@ -9,7 +9,7 @@ table_inter = 'raw_customer_churn_sf_temp'
 # DBTITLE 1,Snowflake connetion details
 # Define Snowflake connection details
 snowflake_url = "roxlfst-jc21920.snowflakecomputing.com"
-snowflake_user = "DHARAN"
+snowflake_user = ""
 snowflake_password = ''
 snowflake_warehouse = "COMPUTE_WH"
 snowflake_role = "ACCOUNTADMIN"
